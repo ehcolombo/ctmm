@@ -260,24 +260,19 @@ lognorm.ci <- function(MLE,VAR,level=0.95,alpha=1-level)
 beta.ci <- function(MLE,VAR,level=0.95,alpha=1-level)
 {
   MLE <- nant(MLE,0)
-  VAR <- nant(VAR,Inf)
-  if(VAR==0){
-    CI <- c(0,MLE,1)
+  VAR <- nant(VAR,Inf)  
+  n <- MLE*(1-MLE)/VAR - 1
+  if(n<=0 | is.nan(n)){
+    CI <- c(0,MLE,1) 
+  }  
+  else{
+    a <- n * MLE
+    b <- n * (1-MLE)
+    CI <- stats::qbeta(c(alpha/2,0.5,1-alpha/2),a,b)
+    CI[2] <- MLE # replace median with mean
   }
-  else{    
-    n <- MLE*(1-MLE)/VAR - 1
-      if(n<=0)
-      { CI <- c(0,MLE,1) }  
-    else
-    {
-      a <- n * MLE
-      b <- n * (1-MLE)
-      CI <- stats::qbeta(c(alpha/2,0.5,1-alpha/2),a,b)
-      CI[2] <- MLE # replace median with mean
-    }
-    names(CI) <- NAMES.CI
-    return(CI)
-  }
+  names(CI) <- NAMES.CI
+  return(CI)
 }
 
 
