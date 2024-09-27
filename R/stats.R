@@ -259,9 +259,11 @@ lognorm.ci <- function(MLE,VAR,level=0.95,alpha=1-level)
 # beta distributed CI given mean and variance estimates
 beta.ci <- function(MLE,VAR,level=0.95,alpha=1-level)
 {
-  print(VAR)
   MLE <- nant(MLE,0)
   VAR <- nant(VAR,Inf)  
+  if(VAR==0){
+    warning("NaN error")
+  }
   n <- MLE*(1-MLE)/VAR - 1
   if(is.nan(n)){
     CI <- c(0,MLE,1)  
