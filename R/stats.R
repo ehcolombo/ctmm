@@ -262,7 +262,10 @@ beta.ci <- function(MLE,VAR,level=0.95,alpha=1-level)
   MLE <- nant(MLE,0)
   VAR <- nant(VAR,Inf)  
   n <- MLE*(1-MLE)/VAR - 1
-  if(n<=0 | is.nan(n)){
+  if(is.nan(n)){
+    CI <- c(0,MLE,1)  
+  }
+  else if(n<=0){
     CI <- c(0,MLE,1) 
   }  
   else{
